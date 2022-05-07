@@ -264,15 +264,17 @@ void gauss_jordan(double ** mat, int n, double ** mat_inv) {
                 }
                 mat[row][c] = 0;
             }
-            
-            int num_lead_zeros = count_leading_zeros(mat, n, row);
-            
-            if(num_lead_zeros >= n && !is_singular) {
-                printf("Matrix is singular\n");
-                is_singular = true;
-            }
         }
+    }
 
+    // Check if matrix is singular
+    for(int row = 0; row < n; ++row) {
+        int num_lead_zeros = count_leading_zeros(mat, n, row);
+
+        if(num_lead_zeros >= row + 1 && !is_singular) {
+            printf("Matrix is singular\n");
+            is_singular = true;
+        }
     }
 
     // Backtrace to convert to reduced row echelon form
