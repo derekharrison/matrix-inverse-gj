@@ -30,7 +30,7 @@ int main(int argc, char * argv[]) {
     // Compute inverse using Gauss-Jordan method
     gauss_jordan(mat, n, mat_inv);
 
-    // Verify compuation
+    // Verify computation
     mat_mult_sq(mat_store, mat_inv, n, mat_prod);
 
     // Print results
