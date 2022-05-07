@@ -207,11 +207,7 @@ void sort_matrix(double * order_arr, int n, double ** mat) {
     free_mat2D(mat_ordered, n);
 }
 
-void gauss_jordan(double ** mat, int n, double ** mat_inv) {
-
-    double * order_arr = new double[n];
-
-    // Initialize matrix inverse
+void init_mat_inv(double ** mat_inv, int n) {
     for(int row = 0; row < n; ++row) {
         for(int c = 0; c < n; ++c) {
             if(c == row) {
@@ -222,13 +218,15 @@ void gauss_jordan(double ** mat, int n, double ** mat_inv) {
             }
         }
     }
+}
+
+void gauss_jordan(double ** mat, int n, double ** mat_inv) {
+
+    double * order_arr = new double[n];
+
+    // Initialize matrix inverse
+    init_mat_inv(mat_inv, n);
     
-    // Initialize singularity flag
-    bool is_singular = false;
-
-    // Check if input matrix is singular
-    singularity_check(mat, n, is_singular);
-
     // Convert to row echelon form
     for(int c = 0; c < n; ++c) {
         
@@ -271,9 +269,8 @@ void gauss_jordan(double ** mat, int n, double ** mat_inv) {
     for(int row = 0; row < n; ++row) {
         int num_lead_zeros = count_leading_zeros(mat, n, row);
 
-        if(num_lead_zeros >= row + 1 && !is_singular) {
+        if(num_lead_zeros >= row + 1) {
             printf("Matrix is singular\n");
-            is_singular = true;
         }
     }
 
@@ -288,9 +285,6 @@ void gauss_jordan(double ** mat, int n, double ** mat_inv) {
             }
         }
     }
-    
-    // Check if matrix is singular
-    singularity_check(mat, n, is_singular);
     
     // Free allocated space
     delete [] order_arr;
