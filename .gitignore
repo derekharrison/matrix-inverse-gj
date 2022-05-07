@@ -5,6 +5,5 @@ gauss-jordan.xcodeproj
 .project
 *.aux
 *.log
-*.pdf
 *.gz
 *.tex
