@@ -34,7 +34,7 @@ int main(int argc, char * argv[]) {
     mat_mult_sq(mat_store, mat_inv, n, mat_prod);
 
     // Print results
-    print_mat(mat_prod, n);
+    print_mat(mat_inv, n);
     
     // Free allocated space
     free_mat2D(mat, n);

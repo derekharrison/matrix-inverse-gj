@@ -147,6 +147,7 @@ void gauss_jordan(double ** mat, int n, double ** mat_inv) {
     // Initialize matrix inverse
     init_mat_inv(mat_inv, n);
 
+    // Initialize singularity flag
     bool is_singular = false;
 
     // Convert to row echelon form
