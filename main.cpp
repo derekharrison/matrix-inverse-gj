@@ -192,9 +192,23 @@ void cut_low_vals(double ** mat, int n) {
     }
 }
 
+void sort_matrix(double * order_arr, int n, double ** mat) {
+
+    double ** mat_ordered = mat2D(n);
+
+    sort_mat(mat, n, order_arr, mat_ordered);
+
+    for(int row = 0; row < n; ++row) {
+        for(int c = 0; c < n; ++c) {
+            mat[row][c] = mat_ordered[row][c];
+        }
+    }
+
+    free_mat2D(mat_ordered, n);
+}
+
 void gauss_jordan(double ** mat, int n, double ** mat_inv) {
 
-    double ** mat_ref = mat2D(n);
     double ** mat_ordered = mat2D(n);
     double ** mat_inv_ordered = mat2D(n);
     double * order_arr = new double[n];
@@ -211,70 +225,49 @@ void gauss_jordan(double ** mat, int n, double ** mat_inv) {
         }
     }
     
-    // Sort the input matrix
-    get_order(mat, n, order_arr);
-
-    sort_mat(mat, n, order_arr, mat_ordered);
-    
-    sort_mat(mat_inv, n, order_arr, mat_inv_ordered);
-
-    for(int row = 0; row < n; ++row) {
-        for(int c = 0; c < n; ++c) {
-            mat_ref[row][c] = mat_ordered[row][c];
-            mat_inv[row][c] = mat_inv_ordered[row][c];
-        }
-    }
-    
     // Initialize singularity flag
     bool is_singular = false;
 
     // Check if input matrix is singular
-    singularity_check(mat_ref, n, is_singular);
+    singularity_check(mat, n, is_singular);
 
     // Convert to row echelon form
     for(int c = 0; c < n; ++c) {
         
         // Sort if under threshold
-        if(fabs(mat_ref[c][c]) <= SMALL_NUM) {
-            get_order(mat_ref, n, order_arr);
+        if(fabs(mat[c][c]) <= SMALL_NUM) {
+            get_order(mat, n, order_arr);
 
-            sort_mat(mat_ref, n, order_arr, mat_ordered);
+            sort_matrix(order_arr, n, mat);
 
-            sort_mat(mat_inv, n, order_arr, mat_inv_ordered);
-
-            for(int row = 0; row < n; ++row) {
-                for(int c = 0; c < n; ++c) {
-                    mat_ref[row][c] = mat_ordered[row][c];
-                    mat_inv[row][c] = mat_inv_ordered[row][c];
-                }
-            }
+            sort_matrix(order_arr, n, mat_inv);
         }
 
         // Normalize matrix row
         for(int col = c + 1; col < n; ++col) {
-            mat_ref[c][col] = mat_ref[c][col] / (mat_ref[c][c] + SMALL_NUM);
+            mat[c][col] = mat[c][col] / (mat[c][c] + SMALL_NUM);
         }
 
         // Update row matrix inverse
         for(int col = 0; col < n; ++col) {
-            mat_inv[c][col] = mat_inv[c][col] / (mat_ref[c][c] + SMALL_NUM);
+            mat_inv[c][col] = mat_inv[c][col] / (mat[c][c] + SMALL_NUM);
         }
 
-        mat_ref[c][c] = 1.0;
+        mat[c][c] = 1.0;
 
         // Delete elements in rows below
         for(int row = c + 1; row < n; ++row) {
-            if(mat_ref[row][c] != 0) {
+            if(mat[row][c] != 0) {
                 for(int col = c + 1; col < n; ++col) {
-                    mat_ref[row][col] = -1.0 * mat_ref[row][c] * mat_ref[c][col] + mat_ref[row][col];
+                    mat[row][col] = -1.0 * mat[row][c] * mat[c][col] + mat[row][col];
                 }
                 for(int col = 0; col < n; ++col) {
-                    mat_inv[row][col] = -1.0 * mat_ref[row][c] * mat_inv[c][col] + mat_inv[row][col];
+                    mat_inv[row][col] = -1.0 * mat[row][c] * mat_inv[c][col] + mat_inv[row][col];
                 }
-                mat_ref[row][c] = 0;
+                mat[row][c] = 0;
             }
             
-            int num_lead_zeros = count_leading_zeros(mat_ref, n, row);
+            int num_lead_zeros = count_leading_zeros(mat, n, row);
             
             if(num_lead_zeros >= n && !is_singular) {
                 printf("Matrix is singular\n");
@@ -287,20 +280,19 @@ void gauss_jordan(double ** mat, int n, double ** mat_inv) {
     // Backtrace to convert to reduced row echelon form
     for(int c = n - 1; c > 0; --c) {
         for(int row = c - 1; row > -1; --row) {
-            if(mat_ref[row][c] != 0) {
+            if(mat[row][c] != 0) {
                 for(int col = 0; col < n; ++col) {
-                    mat_inv[row][col] = -1.0 * mat_ref[row][c] * mat_inv[c][col] + mat_inv[row][col];
+                    mat_inv[row][col] = -1.0 * mat[row][c] * mat_inv[c][col] + mat_inv[row][col];
                 }
-                mat_ref[row][c] = 0;
+                mat[row][c] = 0;
             }
         }
     }
     
     // Check if matrix is singular
-    singularity_check(mat_ref, n, is_singular);
+    singularity_check(mat, n, is_singular);
     
     // Free allocated space
-    free_mat2D(mat_ref, n);
     free_mat2D(mat_ordered, n);
     free_mat2D(mat_inv_ordered, n);
     delete [] order_arr;
@@ -324,9 +316,17 @@ void init_mat(int n, double ** mat) {
     
     for(int i = 0; i < n; ++i) {
         for(int j = 0; j < n; ++j) {
-            double rand_num_loc = rand_num(-25, 25);
-            if(fabs(rand_num_loc) <= SMALL_NUM) { rand_num_loc = 0.0; }
+            double rand_num_loc = rand_di(-5, 5);
+            if(fabs(rand_num_loc) <= 2) { rand_num_loc = 0.0; }
             mat[i][j] = rand_num_loc;
+        }
+    }
+}
+
+void set_mat(double ** mat, int n, double ** mat_store) {
+    for(int i = 0; i < n; ++i) {
+        for(int j = 0; j < n; ++j) {
+            mat_store[i][j] = mat[i][j];
         }
     }
 }
@@ -334,21 +334,25 @@ void init_mat(int n, double ** mat) {
 int main(int argc, char * argv[]) {
 
     // Declarations
-    int n = 10;
+    int n = 5;
 
     // Allocate space for matrices
     double ** mat = mat2D(n);
     double ** mat_inv = mat2D(n);
     double ** mat_prod = mat2D(n);
+    double ** mat_store = mat2D(n);
 
     // Populate matrix mat with some data
     init_mat(n, mat);
+
+    // Store initial matrix mat
+    set_mat(mat, n, mat_store);
 
     // Compute inverse using Gauss-Jordan method
     gauss_jordan(mat, n, mat_inv);
 
     // Verify compuation
-    mat_mult_sq(mat, mat_inv, n, mat_prod);
+    mat_mult_sq(mat_store, mat_inv, n, mat_prod);
 
     // Print results
     print_mat(mat_prod, n);
@@ -357,6 +361,7 @@ int main(int argc, char * argv[]) {
     free_mat2D(mat, n);
     free_mat2D(mat_inv, n);
     free_mat2D(mat_prod, n);
+    free_mat2D(mat_store, n);
 
     return 0;
 }

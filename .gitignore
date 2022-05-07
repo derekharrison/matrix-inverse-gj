@@ -3,3 +3,8 @@ gauss-jordan.xcodeproj
 .settings/
 .cproject
 .project
+*.aux
+*.log
+*.pdf
+*.gz
+*.tex
