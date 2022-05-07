@@ -312,8 +312,8 @@ void init_mat(int n, double ** mat) {
     
     for(int i = 0; i < n; ++i) {
         for(int j = 0; j < n; ++j) {
-            double rand_num_loc = rand_di(-5, 5);
-            if(fabs(rand_num_loc) <= 2) { rand_num_loc = 0.0; }
+            double rand_num_loc = rand_num(-25, 25);
+            if(fabs(rand_num_loc) <= SMALL_NUM) { rand_num_loc = 0.0; }
             mat[i][j] = rand_num_loc;
         }
     }
@@ -330,7 +330,7 @@ void set_mat(double ** mat, int n, double ** mat_store) {
 int main(int argc, char * argv[]) {
 
     // Declarations
-    int n = 5;
+    int n = 10;
 
     // Allocate space for matrices
     double ** mat = mat2D(n);
