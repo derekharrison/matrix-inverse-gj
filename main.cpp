@@ -209,8 +209,6 @@ void sort_matrix(double * order_arr, int n, double ** mat) {
 
 void gauss_jordan(double ** mat, int n, double ** mat_inv) {
 
-    double ** mat_ordered = mat2D(n);
-    double ** mat_inv_ordered = mat2D(n);
     double * order_arr = new double[n];
 
     // Initialize matrix inverse
@@ -293,8 +291,6 @@ void gauss_jordan(double ** mat, int n, double ** mat_inv) {
     singularity_check(mat, n, is_singular);
     
     // Free allocated space
-    free_mat2D(mat_ordered, n);
-    free_mat2D(mat_inv_ordered, n);
     delete [] order_arr;
 }
 
