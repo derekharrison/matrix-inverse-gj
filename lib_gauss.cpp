@@ -128,12 +128,26 @@ void init_mat_inv(double ** mat_inv, int n) {
     }
 }
 
+void check_leading_zeros(double ** mat, int n, bool & is_singular) {
+    // Check if matrix is singular
+    for(int row = 0; row < n; ++row) {
+        int num_lead_zeros = count_leading_zeros(mat, n, row);
+
+        if(num_lead_zeros >= row + 1 && !is_singular) {
+            printf("Matrix is singular\n");
+            is_singular = true;
+        }
+    }
+}
+
 void gauss_jordan(double ** mat, int n, double ** mat_inv) {
 
     double * order_arr = new double[n];
 
     // Initialize matrix inverse
     init_mat_inv(mat_inv, n);
+
+    bool is_singular = false;
 
     // Convert to row echelon form
     for(int c = 0; c < n; ++c) {
@@ -145,6 +159,8 @@ void gauss_jordan(double ** mat, int n, double ** mat_inv) {
             sort_matrix(order_arr, n, mat);
 
             sort_matrix(order_arr, n, mat_inv);
+
+            check_leading_zeros(mat, n, is_singular);
         }
 
         // Normalize matrix row
@@ -170,15 +186,6 @@ void gauss_jordan(double ** mat, int n, double ** mat_inv) {
                 }
                 mat[row][c] = 0;
             }
-        }
-    }
-
-    // Check if matrix is singular
-    for(int row = 0; row < n; ++row) {
-        int num_lead_zeros = count_leading_zeros(mat, n, row);
-
-        if(num_lead_zeros >= row + 1) {
-            printf("Matrix is singular\n");
         }
     }
 
