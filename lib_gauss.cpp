@@ -25,30 +25,6 @@ void get_order(double ** mat, int n, double * order_arr) {
     }
 }
 
-void mergesort_mat(double ** mat, int n, double * order_arr, double ** ordered_mat) {
-
-    oa_elem_t * order_array = new oa_elem_t[n];
-
-    for(int row = 0; row < n; ++row) {
-        order_array[row].old_row = row;
-        order_array[row].val = order_arr[row];
-    }
-
-    mergesort(order_array, n);
-
-    for(int row = 0; row < n; ++row) {
-        for(int c = 0; c < n; ++c) {
-            int old_row = order_array[row].old_row;
-            ordered_mat[row][c] = mat[old_row][c];
-            if(fabs(ordered_mat[row][c]) <= SMALL_NUM) {
-                ordered_mat[row][c] = 0.0;
-            }
-        }
-    }
-
-    delete [] order_array;
-}
-
 int count_leading_zeros(double ** mat, int n, int row) {
 
     int count = 0;
@@ -58,21 +34,6 @@ int count_leading_zeros(double ** mat, int n, int row) {
     }
 
     return count;
-}
-
-void sort_mat(double * order_arr, int n, double ** mat) {
-
-    double ** mat_ordered = mat2D(n);
-
-    mergesort_mat(mat, n, order_arr, mat_ordered);
-
-    for(int row = 0; row < n; ++row) {
-        for(int c = 0; c < n; ++c) {
-            mat[row][c] = mat_ordered[row][c];
-        }
-    }
-
-    free_mat2D(mat_ordered, n);
 }
 
 void init_mat_inv(double ** mat_inv, int n) {
@@ -98,6 +59,21 @@ void check_leading_zeros(double ** mat, int n, bool & is_singular) {
             is_singular = true;
         }
     }
+}
+
+void sort_mat(double * order_arr, int n, double ** mat) {
+
+    double ** mat_ordered = mat2D(n);
+
+    mergesort_mat(mat, n, order_arr, mat_ordered);
+
+    for(int row = 0; row < n; ++row) {
+        for(int c = 0; c < n; ++c) {
+            mat[row][c] = mat_ordered[row][c];
+        }
+    }
+
+    free_mat2D(mat_ordered, n);
 }
 
 void gauss_jordan(double ** mat, int n, double ** mat_inv) {

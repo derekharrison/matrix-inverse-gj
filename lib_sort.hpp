@@ -10,7 +10,6 @@
 
 #include "user_types.hpp"
 
-void mergesort(oa_elem_t A[], int size);
-
+void mergesort_mat(double ** mat, int n, double * order_arr, double ** ordered_mat);
 
 #endif /* LIB_SORT_HPP_ */
