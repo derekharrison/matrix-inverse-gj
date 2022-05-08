@@ -70,6 +70,11 @@ void sort_mat(double * order_arr, int n, double ** mat) {
     for(int row = 0; row < n; ++row) {
         for(int c = 0; c < n; ++c) {
             mat[row][c] = mat_ordered[row][c];
+
+            // Cut numerically low values
+            if(fabs(mat[row][c]) <= SMALL_NUM) {
+                mat[row][c] = 0.0;
+            }
         }
     }
 
