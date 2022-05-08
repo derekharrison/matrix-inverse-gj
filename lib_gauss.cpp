@@ -25,7 +25,7 @@ void get_order(double ** mat, int n, double * order_arr) {
     }
 }
 
-void sort_mat(double ** mat, int n, double * order_arr, double ** ordered_mat) {
+void mergesort_mat(double ** mat, int n, double * order_arr, double ** ordered_mat) {
 
     oa_elem_t * order_array = new oa_elem_t[n];
 
@@ -100,11 +100,11 @@ void cut_low_vals(double ** mat, int n) {
     }
 }
 
-void sort_matrix(double * order_arr, int n, double ** mat) {
+void sort_mat(double * order_arr, int n, double ** mat) {
 
     double ** mat_ordered = mat2D(n);
 
-    sort_mat(mat, n, order_arr, mat_ordered);
+    mergesort_mat(mat, n, order_arr, mat_ordered);
 
     for(int row = 0; row < n; ++row) {
         for(int c = 0; c < n; ++c) {
@@ -157,9 +157,9 @@ void gauss_jordan(double ** mat, int n, double ** mat_inv) {
         if(fabs(mat[c][c]) <= SMALL_NUM) {
             get_order(mat, n, order_arr);
 
-            sort_matrix(order_arr, n, mat);
+            sort_mat(order_arr, n, mat);
 
-            sort_matrix(order_arr, n, mat_inv);
+            sort_mat(order_arr, n, mat_inv);
 
             check_leading_zeros(mat, n, is_singular);
         }
