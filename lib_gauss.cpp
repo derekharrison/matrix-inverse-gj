@@ -107,14 +107,12 @@ void gauss_jordan(double ** mat, int n, double ** mat_inv) {
 
         // Normalize matrix row
         for(int col = c + 1; col < n; ++col) {
-            bool is_small = fabs(mat[c][c]) <= SMALL_NUM;
-            mat[c][col] = is_small ? 0.0 : mat[c][col] / mat[c][c];;
+            mat[c][col] = fabs(mat[c][c]) <= SMALL_NUM ? 0.0 : mat[c][col] / mat[c][c];;
         }
 
         // Update row matrix inverse
         for(int col = 0; col < n; ++col) {
-            bool is_small = fabs(mat[c][c]) <= SMALL_NUM;
-            mat_inv[c][col] = is_small ? 0.0 : mat_inv[c][col] / mat[c][c];;
+            mat_inv[c][col] = fabs(mat[c][c]) <= SMALL_NUM ? 0.0 : mat_inv[c][col] / mat[c][c];;
         }
 
         mat[c][c] = 1.0;
