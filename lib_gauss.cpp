@@ -60,46 +60,6 @@ int count_leading_zeros(double ** mat, int n, int row) {
     return count;
 }
 
-void singularity_check(double ** mat_ref, int n, bool & is_singular) {
-
-    for(int row = 0; row < n; ++row) {
-        bool all_zeros_c = true;
-        for(int col = 0; col < n; ++col) {
-            if(fabs(mat_ref[row][col]) > SMALL_NUM) {
-                all_zeros_c = false;
-            }
-        }
-        if(all_zeros_c && !is_singular) {
-            printf("Matrix is singular\n");
-            is_singular = true;
-        }
-    }
-
-    for(int col = 0; col < n; ++col) {
-        bool all_zeros_r = true;
-        for(int row = 0; row < n; ++row) {
-            if(fabs(mat_ref[row][col]) > SMALL_NUM) {
-                all_zeros_r = false;
-            }
-        }
-        if(all_zeros_r && !is_singular) {
-            printf("Matrix is singular\n");
-            is_singular = true;
-        }
-    }
-}
-
-void cut_low_vals(double ** mat, int n) {
-
-    for(int row = 0; row < n; ++row) {
-        for(int col = 0; col < n; ++col) {
-            if(fabs(mat[row][col]) <= SMALL_NUM) {
-                mat[row][col] = 0.0;
-            }
-        }
-    }
-}
-
 void sort_mat(double * order_arr, int n, double ** mat) {
 
     double ** mat_ordered = mat2D(n);
