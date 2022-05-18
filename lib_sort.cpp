@@ -72,9 +72,6 @@ void mergesort_mat(double ** mat, int n, double * order_arr, double ** ordered_m
         for(int c = 0; c < n; ++c) {
             int old_row = order_array[row].old_row;
             ordered_mat[row][c] = mat[old_row][c];
-            if(fabs(ordered_mat[row][c]) <= SMALL_NUM) {
-                ordered_mat[row][c] = 0.0;
-            }
         }
     }
 
