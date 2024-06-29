@@ -9,7 +9,7 @@
 #define USER_TYPES_HPP_
 
 
-const int MAX_INT = 1215752192;
+const int MAX_INT = 3e8;
 const double SMALL_NUM = 1e-10;
 
 typedef struct order_array_elem {

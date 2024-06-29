@@ -11,19 +11,8 @@
 
 #include "lib_mat.hpp"
 #include "lib_mem.hpp"
-#include "lib_sort.hpp"
 #include "user_types.hpp"
 
-void get_order(double ** mat, int n, double * order_arr) {
-    for(int row = 0; row < n; ++row) {
-        int order = 0;
-        while(fabs(mat[row][order]) <= SMALL_NUM && order < n) {
-            mat[row][order] = 0.0;
-            order++;
-        }
-        order_arr[row] = order;
-    }
-}
 
 int count_leading_zeros(double ** mat, int n, int row) {
 
@@ -61,24 +50,29 @@ void check_leading_zeros(double ** mat, int n, bool & is_singular) {
     }
 }
 
-void sort_mat(double * order_arr, int n, double ** mat) {
 
-    double ** mat_ordered = mat2D(n);
-
-    mergesort_mat(mat, n, order_arr, mat_ordered);
-
-    for(int row = 0; row < n; ++row) {
-        for(int c = 0; c < n; ++c) {
-            mat[row][c] = mat_ordered[row][c];
-
-            // Cut numerically low values
-            if(fabs(mat[row][c]) <= SMALL_NUM) {
-                mat[row][c] = 0.0;
-            }
-        }
+void swap(double ** mat, int r1, int r2, int n) {
+    
+    double * row = new double[n];
+    
+    for(int j = 0; j < n; j++) {
+        row[j] = mat[r1][j];
+        mat[r1][j] = mat[r2][j];
     }
+    
+    for(int j = 0; j < n; j++)
+        mat[r2][j] = row[j];
+    
+}
 
-    free_mat2D(mat_ordered, n);
+int find(double ** mat, int c, int n) {
+    
+    for(int row = c + 1; row < n; row++) {
+        if(fabs(mat[row][c]) > SMALL_NUM)
+            return row;
+    }
+    
+    return -1;
 }
 
 void gauss_jordan(double ** mat, int n, double ** mat_inv) {
@@ -96,11 +90,9 @@ void gauss_jordan(double ** mat, int n, double ** mat_inv) {
 
         // Sort if under threshold
         if(fabs(mat[c][c]) <= SMALL_NUM) {
-            get_order(mat, n, order_arr);
-
-            sort_mat(order_arr, n, mat);
-
-            sort_mat(order_arr, n, mat_inv);
+            int row = find(mat, c, n);
+            swap(mat, row, c, n);
+            swap(mat_inv, row, c, n);
 
             check_leading_zeros(mat, n, is_singular);
         }
