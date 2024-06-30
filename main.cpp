@@ -13,7 +13,7 @@
 int main(int argc, char * argv[]) {
 
     // Declarations
-    int n = 16;
+    int n = 10;
 
     // Allocate space for matrices
     double ** mat = mat2D(n);
