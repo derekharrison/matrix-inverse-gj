@@ -93,7 +93,7 @@ void gauss_jordan(double ** mat, int n, double ** mat_inv) {
         }
     }
 
-    // Backtrace to convert to reduced row echelon form
+    // Backtrack to convert to reduced row echelon form
     for(int c = n - 1; c > 0; --c) {
         for(int row = c - 1; row > -1; --row) {
             if(mat[row][c] != 0) {
