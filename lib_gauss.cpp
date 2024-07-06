@@ -60,9 +60,14 @@ void gauss_jordan(double ** mat, int n, double ** mat_inv) {
     // Convert to row echelon form
     for(int c = 0; c < n; ++c) {
 
-        // Sort if under threshold
+        // Swap if under threshold
         if(fabs(mat[c][c]) <= SMALL_NUM) {
             int row = find(mat, c, n);
+            if(row == -1) {
+                print_mat(mat, n);
+                printf("Input matrix is singular\n");
+                return;
+            }
             swap(mat, row, c, n);
             swap(mat_inv, row, c, n);
         }
