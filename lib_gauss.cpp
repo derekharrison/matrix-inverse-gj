@@ -64,8 +64,7 @@ void gauss_jordan(double ** mat, int n, double ** mat_inv) {
         if(fabs(mat[c][c]) <= SMALL_NUM) {
             int row = find(mat, c, n);
             if(row == -1) {
-                print_mat(mat, n);
-                printf("Input matrix is singular\n");
+                print_mat_singular();
                 return;
             }
             swap(mat, row, c, n);

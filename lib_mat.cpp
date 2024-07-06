@@ -53,6 +53,10 @@ void print_mat(double ** mat, int n) {
     }
 }
 
+void print_mat_singular() {
+    printf("Input matrix is singular\n");
+}
+
 void mat_mult_sq(double ** A, double ** A_inv, int n, double ** mat_res) {
 
     for(int i = 0; i < n; ++i) {

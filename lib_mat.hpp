@@ -12,6 +12,7 @@
 void init_mat(int n, double ** mat);
 void set_mat(double ** mat, int n, double ** mat_store);
 void print_mat(double ** mat, int n);
+void print_mat_singular();
 void mat_mult_sq(double ** A, double ** A_inv, int n, double ** mat_res);
 
 
